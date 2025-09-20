@@ -20,12 +20,16 @@
   },
   "private": true,
   "dependencies": {
+<<<<<<< HEAD
     "@angular/animations": "^20.3.1",
     "@angular/cdk": "^20.2.4",
+=======
+>>>>>>> 96308c6 (initial commit)
     "@angular/common": "^20.1.0",
     "@angular/compiler": "^20.1.0",
     "@angular/core": "^20.1.0",
     "@angular/forms": "^20.1.0",
+<<<<<<< HEAD
     "@angular/material": "^20.2.4",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
@@ -39,13 +43,22 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "xlsx": "^0.18.5",
+=======
+    "@angular/platform-browser": "^20.1.0",
+    "@angular/router": "^20.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+>>>>>>> 96308c6 (initial commit)
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular/build": "^20.1.1",
     "@angular/cli": "^20.1.1",
     "@angular/compiler-cli": "^20.1.0",
+<<<<<<< HEAD
     "@types/file-saver": "^2.0.7",
+=======
+>>>>>>> 96308c6 (initial commit)
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
