@@ -29,17 +29,19 @@ import { AuthService } from '../../core/auth.service';
       </form>
 
       <ul class="hint">
-          <li>admin@edutec.cl / TEMP_1234</li>
-          <li>docente@edutec.cl / 1234</li>
-          <li>alumno@edutec.cl / 1234</li>
+        <li>admin&#64;edutec.cl / TEMP_1234</li>
+        <li>docente&#64;edutec.cl / 1234</li>
+        <li>alumno&#64;edutec.cl / 1234</li>
       </ul>
-
-      
     </mat-card>
   </div>
   `,
-  styles:[`.container{min-height:100vh;display:flex;align-items:center;justify-content:center}
-           mat-card{width:360px;padding:16px}.full{width:100%}.hint{margin-top:12px;color:#777;font-size:12px}`],
+  styles:[`
+    .container{min-height:100vh;display:flex;align-items:center;justify-content:center}
+    mat-card{width:360px;padding:16px}
+    .full{width:100%}
+    .hint{margin-top:12px;color:#777;font-size:12px}
+  `],
   imports:[CommonModule, FormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule]
 })
 export class LoginComponent {

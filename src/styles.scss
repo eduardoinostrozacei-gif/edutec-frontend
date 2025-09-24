@@ -1,25 +1,21 @@
 @use '@angular/material' as mat;
 
-html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+// Tema mínimo compatible con Material v18 (sin funciones viejas)
+$theme: mat.define-theme((
+  color: (theme-type: light)
+));
+
+// Aplica el tema a todos los componentes de Material
+:root {
+  @include mat.all-component-themes($theme);
 }
 
+/* Globales */
+html, body { height: 100%; }
 body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   color-scheme: light;
-
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  margin: 0;
 }
-
-html, body { height: 100%; }
-body { font-family: Roboto, "Helvetica Neue", sans-serif; }
