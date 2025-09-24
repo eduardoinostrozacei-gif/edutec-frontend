@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { apiUrl } from '../core/api-url.util';
 
 export interface Aula {
   idAula?: number;
@@ -20,27 +20,26 @@ export interface Page<T> {
 
 @Injectable({ providedIn: 'root' })
 export class AulasService {
-  private readonly base = environment.api;
   constructor(private http: HttpClient) {}
 
   listar(page = 0, size = 20) {
     const params = new HttpParams().set('page', page).set('size', size);
-    return this.http.get<Page<Aula>>(`${this.base}/aulas`, { params });
+    return this.http.get<Page<Aula>>(apiUrl('/aulas'), { params });
   }
 
   obtener(id: number) {
-    return this.http.get<Aula>(`${this.base}/aulas/${id}`);
+    return this.http.get<Aula>(apiUrl(`/aulas/${id}`));
   }
 
   crear(aula: Aula) {
-    return this.http.post<Aula>(`${this.base}/aulas`, aula);
+    return this.http.post<Aula>(apiUrl('/aulas'), aula);
   }
 
   actualizar(id: number, aula: Aula) {
-    return this.http.put<Aula>(`${this.base}/aulas/${id}`, aula);
+    return this.http.put<Aula>(apiUrl(`/aulas/${id}`), aula);
   }
 
   eliminar(id: number) {
-    return this.http.delete(`${this.base}/aulas/${id}`);
+    return this.http.delete(apiUrl(`/aulas/${id}`));
   }
 }

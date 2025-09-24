@@ -1,0 +1,65 @@
+[1mdiff --git a/src/app/core/auth.service.ts b/src/app/core/auth.service.ts[m
+[1mindex a3f8231..fe94561 100644[m
+[1m--- a/src/app/core/auth.service.ts[m
+[1m+++ b/src/app/core/auth.service.ts[m
+[36m@@ -1,41 +1,38 @@[m
+ import { Injectable } from '@angular/core';[m
+ import { HttpClient } from '@angular/common/http';[m
+[31m-import { environment } from '../../environments/environment';[m
+ import { firstValueFrom } from 'rxjs';[m
+[32m+[m[32mimport { apiUrl } from './api-url.util';[m
+ [m
+ export interface TokenDTO { token: string; }[m
+ export interface MeDTO { usuario: string; authorities: string[]; }[m
+ [m
+ @Injectable({ providedIn: 'root' })[m
+ export class AuthService {[m
+[31m-  private readonly base = environment.api;[m
+   private readonly KEY = 'auth_token';[m
+[31m-  private rolesCache: string[] = []; // nunca null[m
+[32m+[m[32m  private rolesCache: string[] = [];[m
+ [m
+   constructor(private http: HttpClient) {}[m
+ [m
+[31m-  // --- Auth básica ---[m
+   async login(body: { correo: string; contrasena: string; }): Promise<void> {[m
+     const res = await firstValueFrom([m
+[31m-      this.http.post<TokenDTO>(`${this.base}/auth/login`, body)[m
+[32m+[m[32m      this.http.post<TokenDTO>(apiUrl('/auth/login'), body)[m
+     );[m
+     localStorage.setItem(this.KEY, res.token);[m
+     this.rolesCache = [];[m
+     await this.refreshRoles();[m
+   }[m
+ [m
+[31m-  logout(){[m
+[32m+[m[32m  logout() {[m
+     localStorage.removeItem(this.KEY);[m
+     this.rolesCache = [];[m
+   }[m
+ [m
+[31m-  isLogged(){ return !!localStorage.getItem(this.KEY); }[m
+[32m+[m[32m  isLogged() { return !!localStorage.getItem(this.KEY); }[m
+   get token(): string | null { return localStorage.getItem(this.KEY); }[m
+ [m
+[31m-  // --- Roles ---[m
+   async refreshRoles(): Promise<string[]> {[m
+     if (!this.isLogged()) { this.rolesCache = []; return []; }[m
+[31m-    const me = await firstValueFrom(this.http.get<MeDTO>(`${this.base}/me`));[m
+[32m+[m[32m    const me = await firstValueFrom(this.http.get<MeDTO>(apiUrl('/me')));[m
+     this.rolesCache = me?.authorities ?? [];[m
+     return this.rolesCache;[m
+   }[m
+[36m@@ -49,12 +46,10 @@[m [mexport class AuthService {[m
+     return this.rolesCache;[m
+   }[m
+ [m
+[31m-  // --- Helpers de permiso ---[m
+   isAdmin(): boolean   { return this.getRoles().includes('ROLE_ADMIN'); }[m
+   isDocente(): boolean { return this.getRoles().includes('ROLE_DOCENTE'); }[m
+   isAlumno(): boolean  { return this.getRoles().includes('ROLE_ALUMNO'); }[m
+ [m
+[31m-[m
+   hasAnyRole(required: string[]): boolean {[m
+     const mine = this.getRoles();[m
+     return required.some(r => {[m

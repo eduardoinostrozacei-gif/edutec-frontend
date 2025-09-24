@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { apiUrl } from '../core/api-url.util';
 
 export interface Aula {
   idAula: number;
@@ -22,9 +22,9 @@ export interface ReservaItem {
   idReserva: number;
   aulaId: number;
   aulaNombre: string;
-  fecha: string;      
-  horaInicio: string;
-  horaFin: string;    
+  fecha: string;       // YYYY-MM-DD
+  horaInicio: string;  // HH:mm
+  horaFin: string;     // HH:mm
   estado: string;
   usuarioCorreo: string;
 }
@@ -55,28 +55,26 @@ export interface ReporteEstadoMes {
 
 @Injectable({ providedIn: 'root' })
 export class ReservasService {
-  private readonly base = environment.api;
   constructor(private http: HttpClient) {}
 
-  listarAulas(page = 0, size = 50) {
+  listarAulas(page = 0, size = 50): Observable<Page<Aula>> {
     const params = new HttpParams().set('page', page).set('size', size);
-    return this.http.get<Page<Aula>>(`${this.base}/aulas`, { params });
+    return this.http.get<Page<Aula>>(apiUrl('/aulas'), { params });
   }
 
-  listarMias(page = 0, size = 10) {
+  listarMias(page = 0, size = 10): Observable<PageResponse<ReservaItem>> {
     const params = new HttpParams().set('page', page).set('size', size);
-    return this.http.get<PageResponse<ReservaItem>>(`${this.base}/reservas-query/mias/page`, { params });
+    return this.http.get<PageResponse<ReservaItem>>(apiUrl('/reservas-query/mias/page'), { params });
   }
 
-  listarMiasPage(page = 0, size = 10) {
+  listarMiasPage(page = 0, size = 10): Observable<PageResponse<ReservaItem>> {
     const params = new HttpParams().set('page', page).set('size', size);
-    return this.http.get<PageResponse<ReservaItem>>(`${this.base}/reservas-query/mias/page`, { params });
+    return this.http.get<PageResponse<ReservaItem>>(apiUrl('/reservas-query/mias/page'), { params });
   }
 
-  cancelar(id: number) {
-    return this.http.delete(`${this.base}/reservas/${id}`);
+  cancelar(id: number): Observable<void> {
+    return this.http.delete<void>(apiUrl(`/reservas/${id}`));
   }
-
 
   disponible(
     idAula: number,
@@ -94,35 +92,43 @@ export class ReservasService {
     if (idReservaExcl != null) {
       params = params.set('idReservaExcl', idReservaExcl);
     }
-    return this.http.get<DisponibilidadResp>(`${this.base}/reservas/disponible`, { params });
+
+    return this.http.get<DisponibilidadResp>(apiUrl('/reservas/disponible'), { params });
   }
 
-  crear(body: { idAula: number; fecha: string; horaInicio: string; horaFin: string; }) {
-    return this.http.post<{ id_reserva: number; estado: string; mensaje: string }>(`${this.base}/reservas`, body);
+  crear(body: { idAula: number; fecha: string; horaInicio: string; horaFin: string })
+    : Observable<{ id_reserva: number; estado: string; mensaje: string }> {
+    return this.http.post<{ id_reserva: number; estado: string; mensaje: string }>(
+      apiUrl('/reservas'),
+      body
+    );
   }
 
-  listarPorFechaAula(fecha: string, idAula: number, page = 0, size = 20) {
+  listarPorFechaAula(fecha: string, idAula: number, page = 0, size = 20)
+    : Observable<PageResponse<ReservaItem>> {
     const params = new HttpParams()
       .set('fecha', fecha)
       .set('idAula', idAula)
       .set('page', page)
       .set('size', size);
-    return this.http.get<PageResponse<ReservaItem>>(`${this.base}/reservas-query/listar`, { params });
+
+    return this.http.get<PageResponse<ReservaItem>>(apiUrl('/reservas-query/listar'), { params });
   }
 
-  usoAulas(desde: string, hasta: string) {
+  usoAulas(desde: string, hasta: string): Observable<ReporteUsoAula[]> {
     const params = new HttpParams().set('desde', desde).set('hasta', hasta);
-    return this.http.get<ReporteUsoAula[]>(`${this.base}/reportes/uso-aulas`, { params });
+    return this.http.get<ReporteUsoAula[]>(apiUrl('/reportes/uso-aulas'), { params });
   }
 
-  estadosMes(desde: string, hasta: string) {
+  estadosMes(desde: string, hasta: string): Observable<ReporteEstadoMes[]> {
     const params = new HttpParams().set('desde', desde).set('hasta', hasta);
-    return this.http.get<ReporteEstadoMes[]>(`${this.base}/reportes/estados-mes`, { params });
+    return this.http.get<ReporteEstadoMes[]>(apiUrl('/reportes/estados-mes'), { params });
   }
 
-  updateHorario(id: number, horaInicio: string, horaFin: string) {
+  updateHorario(id: number, horaInicio: string, horaFin: string)
+    : Observable<{ id_reserva: number; hora_inicio: string; hora_fin: string; mensaje: string }> {
     return this.http.put<{ id_reserva: number; hora_inicio: string; hora_fin: string; mensaje: string }>(
-      `${this.base}/reservas/${id}`,
+      apiUrl(`/reservas/${id}`),
       { horaInicio, horaFin }
     );
   }
