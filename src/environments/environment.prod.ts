@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api: 'https://edutec-backend.onrender.com',
+  apiUrl: 'https://edutec-backend.onrender.com/api' 
 };
